@@ -27,6 +27,11 @@ app.use(cors(corsOptions));
 //   next();
 // });
 
+// home
+app.get("/", (req, res) => {
+  res.send("Backend is configured correctly");
+});
+
 // create account
 app.post("/create_acct", async (req, res) => {
   const { fullname, email, password } = req.body;
