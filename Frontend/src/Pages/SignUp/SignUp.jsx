@@ -26,11 +26,14 @@ const SignUp = () => {
       return;
     }
 
-    const res = await fetch("http://localhost:8000/create_acct", {
-      method: "POST",
-      body: JSON.stringify({ fullname: name, email, password }),
-      headers: { "Content-Type": "application/json" },
-    });
+    const res = await fetch(
+      "https://mern-note-app-api.vercel.app/create_acct",
+      {
+        method: "POST",
+        body: JSON.stringify({ fullname: name, email, password }),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
     const data = await res.json();
     alert(data.message);
 
