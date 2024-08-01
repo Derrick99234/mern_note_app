@@ -2,11 +2,10 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const mongoose = require("mongoose");
-const config = require("./config.json");
 
 const app = express();
 
-mongoose.connect(config.connectionString);
+mongoose.connect(process.env.DBURI);
 
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities");
