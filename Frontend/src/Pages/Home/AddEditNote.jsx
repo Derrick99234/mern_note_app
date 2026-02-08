@@ -91,7 +91,7 @@ const AddEditNote = ({
         <input
           type="text"
           className="text-2xl text-slate-950 outline-none"
-          placeholder="Go to the Gym by 5"
+          placeholder="Add a title"
           value={title}
           onChange={({ target }) => setTitle(target.value)}
         />
@@ -103,7 +103,7 @@ const AddEditNote = ({
         <textarea
           type="text"
           className="text-xs text-slate-950 outline-none bg-slate-50 rounded-md"
-          placeholder="Content"
+          placeholder="Add some content"
           rows={10}
           value={content}
           onChange={({ target }) => setContent(target.value)}
@@ -111,7 +111,7 @@ const AddEditNote = ({
       </div>
       <div className="mt-3">
         <label htmlFor="tags" className="input-label">
-          TAGS
+          TAGS (optional)
         </label>
         <TagInput tags={tags} setTags={setTags} />
       </div>
