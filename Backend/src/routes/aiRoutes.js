@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const { authenticateToken } = require("../middleware/authenticateToken");
-const { noteDraft, transcribeUploadedAudio } = require("../controllers/aiController");
+const { noteDraft, transcribeUploadedAudio, continueStoryController } = require("../controllers/aiController");
 
 const router = express.Router();
 
@@ -13,6 +13,7 @@ const upload = multer({
 });
 
 router.post("/ai/note_draft", authenticateToken, noteDraft);
+router.post("/ai/continue_story", authenticateToken, continueStoryController);
 router.post(
   "/ai/transcribe_audio",
   authenticateToken,

@@ -119,7 +119,47 @@ async function transcribeAudio({ mimeType, base64Audio, languageHint }) {
   return String(result?.text || "").trim();
 }
 
+async function continueStory({ projectContext, previousContext, currentContent, instruction }) {
+  const ai = getClient();
+  if (!ai) {
+    const err = new Error("GEMINI_API_KEY is not configured");
+    err.code = "NO_GEMINI_KEY";
+    throw err;
+  }
+
+  const prompt = [
+    "System: You are an intelligent creative writing assistant.",
+    "Your goal is to continue the story/content seamlessly based on the provided context.",
+    "Rules:",
+    "  - Maintain the established tone, style, and character voices.",
+    "  - Advance the plot or argument logically.",
+    "  - If 'instruction' is provided, follow it specifically (e.g., 'introduce a villain', 'summarize this part').",
+    "  - Return HTML formatted content suitable for a rich text editor (paragraphs <p>, etc.).",
+    "  - Do NOT wrap in markdown code blocks.",
+    "",
+    "Project Context (Summary/Description):",
+    projectContext || "No specific project context.",
+    "",
+    "Previous Context (Last few paragraphs/scene):",
+    previousContext || "No previous context.",
+    "",
+    "Current Content (The user is writing here):",
+    currentContent || "(Start of document)",
+    "",
+    "User Instruction for Continuation:",
+    instruction || "Continue the story naturally.",
+  ].join("\n");
+
+  const result = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: [prompt],
+  });
+
+  return String(result?.text || "").trim();
+}
+
 module.exports = {
   generateNoteDraft,
   transcribeAudio,
+  continueStory,
 };

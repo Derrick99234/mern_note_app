@@ -4,7 +4,41 @@ const {
   exactCaseInsensitiveRegex,
   ensureGlobalCategories,
 } = require("../services/categoryService");
-const { generateNoteDraft, transcribeAudio } = require("../services/geminiService");
+const { generateNoteDraft, transcribeAudio, continueStory } = require("../services/geminiService");
+
+async function continueStoryController(req, res) {
+  try {
+    const { projectContext, previousContext, currentContent, instruction } = req.body;
+    
+    // We don't strictly require any specific field, but it's good to have at least something
+    // If everything is empty, AI will just start a generic story
+    
+    const continuation = await continueStory({
+      projectContext: String(projectContext || "").trim(),
+      previousContext: String(previousContext || "").trim(),
+      currentContent: String(currentContent || "").trim(),
+      instruction: String(instruction || "").trim(),
+    });
+
+    return res.json({
+      error: false,
+      continuation,
+    });
+  } catch (e) {
+    const msg = String(e?.message || "");
+    if (e?.code === "NO_GEMINI_KEY" || msg.includes("GEMINI_API_KEY")) {
+      return res.status(500).json({
+        error: true,
+        message: "GEMINI_API_KEY is not configured",
+      });
+    }
+    console.error("AI Continue Story Error:", e);
+    return res.status(500).json({
+      error: true,
+      message: "Internal server Error",
+    });
+  }
+}
 
 async function noteDraft(req, res) {
   try {
@@ -180,4 +214,5 @@ async function transcribeUploadedAudio(req, res) {
 module.exports = {
   noteDraft,
   transcribeUploadedAudio,
+  continueStoryController,
 };
