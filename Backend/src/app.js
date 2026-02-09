@@ -22,6 +22,7 @@ app.use(
         "http://127.0.0.1:5173",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "https://mern-note-app-theta.vercel.app"
       ];
       if (!origin) return cb(null, true);
       if (allowed.includes(origin)) return cb(null, true);
