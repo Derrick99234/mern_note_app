@@ -1,0 +1,13 @@
+*.env
+.env*
+**/*.env
+**/.env*
+
+.trae/
+
+node_modules
+dist
+dist-ssr
+.DS_Store
+.vscode/*
+.idea
