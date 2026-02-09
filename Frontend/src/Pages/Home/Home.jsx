@@ -703,10 +703,6 @@ const Home = () => {
       >
         <AudioNote
           onClose={() => setIsAudioOpen(false)}
-          onUseText={(contentHtml) => {
-            setIsAudioOpen(false);
-            openTextNoteModal({ content: contentHtml });
-          }}
           onUseDraft={(draft) => {
             setIsAudioOpen(false);
             setOpenAddEditModal({ isShown: true, data: draft, type: "add" });

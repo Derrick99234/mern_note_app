@@ -36,6 +36,7 @@ async function noteDraft(req, res) {
 
     const title = String(parsed.title || "").trim();
     const content = String(parsed.content_html || "").trim();
+    const summaryHtml = String(parsed.summary_html || "").trim();
     const tags = Array.isArray(parsed.tags)
       ? parsed.tags
           .map((t) => String(t || "").trim())
@@ -94,7 +95,9 @@ async function noteDraft(req, res) {
       error: false,
       draft: {
         title: title || "Untitled",
-        content,
+        content: summaryHtml
+          ? `${content}${content ? "<br><br>" : ""}${summaryHtml}`
+          : content,
         tags,
         categoryId,
         categoryName: finalCategoryName || null,

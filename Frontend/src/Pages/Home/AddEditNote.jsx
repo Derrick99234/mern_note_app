@@ -87,6 +87,13 @@ const AddEditNote = ({
   const isEmptyContent = stripHtml(content).length === 0;
 
   useEffect(() => {
+    if (!noteData) return;
+    if (!noteData.__openAIPrompt) return;
+    setShowAIPrompt(true);
+    setAiPrompt(String(noteData.__aiPrompt || ""));
+  }, [noteData]);
+
+  useEffect(() => {
     if (type === "edit") return;
     if (categoryId) return;
     if (!categories || categories.length === 0) return;

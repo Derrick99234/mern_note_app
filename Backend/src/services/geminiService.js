@@ -41,11 +41,16 @@ async function generateNoteDraft({ transcript, prompt, currentContent, allowedCa
     "Return ONLY valid JSON with keys:",
     '  - title: string (short, descriptive)',
     '  - content_html: string (HTML using <p>, <br>, <strong>, <em>, <ul>, <ol>, <li>, <blockquote>)',
+    '  - summary_html: string (HTML using <p>, <br>, <strong>, <em>, <ul>, <ol>, <li>; keep concise)',
     "  - tags: array of 0-6 short strings (no #)",
     `  - category: string (Choose from: ${allowedCategories.join(", ")} OR create a new short category name if none fit)`,
     "Rules:",
     "  - Use the same language as the input.",
     "  - Do NOT include markdown fences.",
+    "  - Remove filler words and obvious repetitions.",
+    "  - Use paragraphs and bullet lists where helpful for readability.",
+    "  - Make content comprehensive but not verbose.",
+    '  - summary_html MUST be a short section that starts with: <p><strong>Summary</strong></p> and then 3-6 bullet points.',
   ];
 
   if (isRefinement) {

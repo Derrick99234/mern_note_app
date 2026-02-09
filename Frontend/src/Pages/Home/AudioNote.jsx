@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   MdClose,
   MdFiberManualRecord,
-  MdGraphicEq,
   MdPause,
   MdPlayArrow,
   MdStop,
@@ -96,7 +95,7 @@ async function convertAudioFileToWav(file) {
   return new File([wavBuffer], "audio.wav", { type: "audio/wav" });
 }
 
-function AudioNote({ onClose, onUseText, onUseDraft }) {
+function AudioNote({ onClose, onUseDraft }) {
   const [activeTab, setActiveTab] = useState("record"); // "record" | "upload"
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
@@ -105,13 +104,13 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
   const [liveDictationEnabled, setLiveDictationEnabled] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState("");
   const [finalTranscript, setFinalTranscript] = useState("");
-  const [editableTranscript, setEditableTranscript] = useState("");
   const [audioUrl, setAudioUrl] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isTranscribingUpload, setIsTranscribingUpload] = useState(false);
   const [uploadStage, setUploadStage] = useState("idle");
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [uploadProgress, setUploadProgress] = useState(null);
+  const [aiDraft, setAiDraft] = useState(null);
 
   const isActiveRef = useRef(true);
   const statusRef = useRef(status);
@@ -124,10 +123,6 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
 
   const recognitionRef = useRef(null);
   const isRecognitionRunningRef = useRef(false);
-
-  const transcriptPreview = useMemo(() => {
-    return `${finalTranscript}${interimTranscript ? ` ${interimTranscript}` : ""}`.trim();
-  }, [finalTranscript, interimTranscript]);
 
   const speechSupported = useMemo(() => !!getSpeechRecognition(), []);
   const language = useMemo(() => navigator.language || "en-US", []);
@@ -261,13 +256,11 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
 
     setStatus("stopped");
     setMicStatus("idle");
-    const clean = transcriptPreview.trim();
-    setEditableTranscript(clean);
   };
 
   const startRecording = async () => {
     setError("");
-    setEditableTranscript("");
+    setAiDraft(null);
     setFinalTranscript("");
     setInterimTranscript("");
     setRecordingSeconds(0);
@@ -365,8 +358,6 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
     }
     setStatus("paused");
     setMicStatus("idle");
-    const clean = transcriptPreview.trim();
-    setEditableTranscript(clean);
   };
 
   const resumeRecording = () => {
@@ -386,22 +377,14 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
     if (liveDictationEnabled && speechSupported) startRecognition(language);
   };
 
-  const finalizeAndUseText = () => {
-    const text = (editableTranscript || transcriptPreview).trim();
-    if (!text) {
-      setError("Transcript is empty.");
-      return;
-    }
-    onUseText(textToQuillHtml(text));
-  };
-
-  const generateWithAI = async () => {
-    const text = (editableTranscript || transcriptPreview).trim();
+  const generateWithAI = async (rawText) => {
+    const text = String(rawText || "").trim();
     if (!text) {
       setError("Transcript is empty.");
       return;
     }
     setError("");
+    setAiDraft(null);
     setIsGenerating(true);
     try {
       const res = await axiosInstance.post("/ai/note_draft", {
@@ -412,12 +395,13 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
         setError("AI draft not available.");
         return;
       }
-      onUseDraft({
+      const normalizedDraft = {
         title: draft.title || "",
         content: draft.content || textToQuillHtml(text),
         tags: Array.isArray(draft.tags) ? draft.tags : [],
         categoryId: draft.categoryId || "",
-      });
+      };
+      setAiDraft(normalizedDraft);
     } catch (e) {
       const msg =
         e?.response?.data?.message ||
@@ -431,13 +415,13 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
   const transcribeUploadedFile = async (file) => {
     if (!file) return;
     setError("");
+    setAiDraft(null);
     setIsTranscribingUpload(true);
     setUploadStage("preparing");
     setUploadProgress(null);
     setStatus("stopped");
     setFinalTranscript("");
     setInterimTranscript("");
-    setEditableTranscript("");
 
     if (audioUrl) URL.revokeObjectURL(audioUrl);
     const url = URL.createObjectURL(file);
@@ -490,8 +474,8 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
         return;
       }
       setFinalTranscript(transcript);
-      setEditableTranscript(transcript);
       setUploadStage("idle");
+      await generateWithAI(transcript);
     } catch (e) {
       const msg = e?.response?.data?.message;
       const fallback = e?.response
@@ -772,61 +756,55 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
         )}
       </div>
 
-      {/* Result Section */}
-      {(status === "stopped" || editableTranscript) && (
+      {/* Result Section: AI Smart Note */}
+      {aiDraft && !showLoader ? (
         <div className="mt-6 pt-6 border-t border-slate-100 animate-in fade-in duration-500">
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-sm font-semibold text-slate-900">Transcript</div>
-            <div className="flex gap-2">
-               {audioUrl && (
-                  <audio className="h-8 w-48" controls src={audioUrl} />
-               )}
+          <div className="flex items-center justify-between gap-4 mb-3">
+            <div>
+              <div className="text-sm font-semibold text-slate-900">
+                Smart Note
+              </div>
+              <div className="text-xs text-slate-500">
+                Auto-generated from your audio
+              </div>
             </div>
+            {audioUrl ? <audio className="h-8 w-48" controls src={audioUrl} /> : null}
           </div>
-          
-          <textarea
-            className="w-full bg-slate-50 rounded-xl p-4 text-sm text-slate-700 outline-none border border-slate-200 focus:border-primary/30 focus:bg-white transition-all min-h-[120px] resize-y"
-            value={editableTranscript}
-            onChange={(e) => setEditableTranscript(e.target.value)}
-            placeholder="Transcript will appear here..."
-          />
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="text-lg font-semibold text-slate-900">
+              {aiDraft.title || "Untitled"}
+            </div>
+            <div
+              className="prose prose-sm sm:prose-base max-w-none text-slate-700 mt-3"
+              dangerouslySetInnerHTML={{ __html: aiDraft.content }}
+            />
+          </div>
 
           <div className="mt-4 flex flex-wrap gap-3 justify-end">
             <button
               type="button"
               className="btn-secondary"
-              onClick={() => {
-                 setStatus("idle");
-                 setAudioUrl("");
-                 setFinalTranscript("");
-                 setInterimTranscript("");
-                 setEditableTranscript("");
-                 setUploadStage("idle");
-                 setUploadProgress(null);
-                 setMicStatus("idle");
-                 setRecordingSeconds(0);
-              }}
+              onClick={() =>
+                onUseDraft({
+                  ...aiDraft,
+                  __openAIPrompt: true,
+                  __aiPrompt: "",
+                })
+              }
             >
-              Reset
-            </button>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={finalizeAndUseText}
-            >
-              Use as Note
+              Refine with AI
             </button>
             <button
               type="button"
               className="btn-primary"
-              onClick={generateWithAI}
+              onClick={() => onUseDraft(aiDraft)}
             >
-              <MdGraphicEq className="text-lg mr-2" />
-              Generate with AI
+              Edit Note
             </button>
           </div>
         </div>
-      )}
+      ) : null}
 
       {error && (
         <div className="mt-4 p-3 rounded-lg bg-red-50 text-red-600 text-xs font-medium animate-in fade-in slide-in-from-top-1">
@@ -841,6 +819,5 @@ export default AudioNote;
 
 AudioNote.propTypes = {
   onClose: PropTypes.func,
-  onUseText: PropTypes.func,
   onUseDraft: PropTypes.func,
 };
