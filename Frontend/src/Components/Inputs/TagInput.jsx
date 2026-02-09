@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
 
-// eslint-disable-next-line react/prop-types
 function TagInput({ tags, setTags }) {
   const [inputValue, setInputValue] = useState("");
 

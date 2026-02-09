@@ -12,12 +12,12 @@ function Toast({ isShown, message, handleToastClose, type }) {
   }, [handleToastClose]);
   return (
     <div
-      className={`absolute top-20 right-6 transition-all duration-400 ${
+      className={`fixed top-20 right-4 sm:right-6 z-50 transition-all duration-400 ${
         isShown ? "opacity-100" : "opacity-0"
       }`}
     >
       <div
-        className={`min-w-52 bg-white border shadow-2xl rounded-md after:w-[5px] after:h-full ${
+        className={`w-[90vw] max-w-sm bg-white border shadow-2xl rounded-md after:w-[5px] after:h-full ${
           type === "delete" ? "after:bg-red-500" : "after:bg-green-500"
         } after:absolute after:top-0 after:left-0 after:rounded-l-lg`}
       >

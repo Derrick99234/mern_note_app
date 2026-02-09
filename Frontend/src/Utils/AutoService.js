@@ -1,9 +1,10 @@
 // AuthService.js
 
 import axios from "axios";
+import { BASE_URL } from "./constant";
 
 const axiosInstance = axios.create({
-  baseURL: "https://mern-note-app-api.vercel.app", // Your API base URL
+  baseURL: BASE_URL,
 });
 
 const AuthService = {
