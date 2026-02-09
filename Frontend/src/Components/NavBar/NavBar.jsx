@@ -3,12 +3,19 @@ import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { useState } from "react";
+import axiosInstance from "../../Utils/axiosInstance";
 
 const NavBar = ({ onNoteSearch, userData, handleClearSearch, isWritingMode }) => {
   const navigate = useNavigate();
-  const onLogout = () => {
-    navigate("/login");
-    localStorage.clear();
+  const onLogout = async () => {
+    try {
+      await axiosInstance.post("/logout");
+    } catch {
+      void 0;
+    } finally {
+      localStorage.clear();
+      navigate("/login");
+    }
   };
 
   const [searchQuery, setSearchQuery] = useState("");

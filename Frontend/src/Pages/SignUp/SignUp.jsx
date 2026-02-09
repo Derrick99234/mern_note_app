@@ -40,8 +40,8 @@ const SignUp = () => {
         password,
       });
 
-      if (res.data?.accessToken) {
-        localStorage.setItem("token", res.data.accessToken);
+      if (res.data && res.data.error === false) {
+        localStorage.removeItem("token");
         navigate("/dashboard");
         return;
       }

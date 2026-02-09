@@ -3,19 +3,33 @@ import { BASE_URL } from "./constant";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,
 });
 
-axiosInstance.interceptors.request.use(
-  async (config) => {
-    const token = localStorage.getItem("token");
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error?.response?.status;
+    const originalRequest = error?.config;
+    const url = String(originalRequest?.url || "");
 
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    if (
+      (status === 401 || status === 403) &&
+      originalRequest &&
+      !originalRequest.__isRetryRequest &&
+      !url.includes("/refresh_token") &&
+      !url.includes("/login") &&
+      !url.includes("/create_acct")
+    ) {
+      originalRequest.__isRetryRequest = true;
+      try {
+        await axiosInstance.post("/refresh_token");
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
     }
 
-    return config;
-  },
-  (error) => {
     return Promise.reject(error);
   }
 );

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -12,9 +13,21 @@ const devRoutes = require("./routes/devRoutes");
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
-    origin: "*",
+    origin: (origin, cb) => {
+      const allowed = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+      ];
+      if (!origin) return cb(null, true);
+      if (allowed.includes(origin)) return cb(null, true);
+      return cb(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
   })
 );
 
@@ -31,4 +44,3 @@ app.use(storyRoutes);
 app.use(devRoutes);
 
 module.exports = app;
-
