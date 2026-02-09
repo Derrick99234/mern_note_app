@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import { MdOutlinePushPin, MdCreate, MdDelete, MdArrowOutward } from "react-icons/md";
 import { formatNoteDate, stripHtml } from "../../Utils/helper";
-/* eslint-disable react/prop-types */
 function NoteCards({
   title,
   date,
@@ -84,5 +84,18 @@ function NoteCards({
     </div>
   );
 }
+
+NoteCards.propTypes = {
+  title: PropTypes.string,
+  date: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.instanceOf(Date)]),
+  content: PropTypes.string,
+  tags: PropTypes.arrayOf(PropTypes.string),
+  category: PropTypes.string,
+  isPinned: PropTypes.bool,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  onPinNote: PropTypes.func,
+  onRead: PropTypes.func,
+};
 
 export default NoteCards;

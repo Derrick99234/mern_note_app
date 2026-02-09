@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 
-// eslint-disable-next-line react/prop-types
 const PasswordInput = ({ value, onChange, placeholder }) => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
 
@@ -25,6 +25,12 @@ const PasswordInput = ({ value, onChange, placeholder }) => {
       </span>
     </div>
   );
+};
+
+PasswordInput.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  placeholder: PropTypes.string,
 };
 
 export default PasswordInput;

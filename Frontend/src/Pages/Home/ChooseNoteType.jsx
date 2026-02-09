@@ -1,8 +1,8 @@
+import PropTypes from "prop-types";
 import { MdClose, MdMic, MdTextFields } from "react-icons/md";
-/* eslint-disable react/prop-types */
 function ChooseNoteType({ onClose, onSelect }) {
   return (
-    <div className="relative">
+    <div className="relative flex flex-col h-full max-h-[80vh]">
       <button
         className="w-10 h-10 rounded-full flex items-center justify-center absolute -top-3 -right-3 hover:bg-slate-50"
         onClick={onClose}
@@ -52,5 +52,10 @@ function ChooseNoteType({ onClose, onSelect }) {
     </div>
   );
 }
+
+ChooseNoteType.propTypes = {
+  onClose: PropTypes.func,
+  onSelect: PropTypes.func,
+};
 
 export default ChooseNoteType;

@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
+
 function EmptyCard({ imgSrc, message }) {
   return (
     <div className="flex flex-col justify-center items-center mt-20">
@@ -9,5 +10,10 @@ function EmptyCard({ imgSrc, message }) {
     </div>
   );
 }
+
+EmptyCard.propTypes = {
+  imgSrc: PropTypes.string,
+  message: PropTypes.string,
+};
 
 export default EmptyCard;

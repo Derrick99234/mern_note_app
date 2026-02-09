@@ -670,10 +670,11 @@ const Home = () => {
         style={{
           overlay: {
             backgroundColor: "rgba(15, 23, 42, 0.35)",
+            zIndex: 9998,
           },
         }}
         contentLabel=""
-        className="w-[95%] sm:w-[90%] md:w-[60%] lg:w-[35%] rounded-2xl p-6 bg-white mt-24 mx-auto overflow-hidden shadow-2xl border border-slate-200/70"
+        className="w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] max-h-[80vh] rounded-2xl p-6 bg-white mt-14 mx-auto overflow-hidden shadow-2xl border border-slate-200/70 outline-none"
       >
         <ChooseNoteType
           onClose={() => setIsChooseTypeOpen(false)}
@@ -694,10 +695,11 @@ const Home = () => {
         style={{
           overlay: {
             backgroundColor: "rgba(15, 23, 42, 0.35)",
+            zIndex: 9998,
           },
         }}
         contentLabel=""
-        className="w-[95%] sm:w-[90%] md:w-[70%] lg:w-[45%] max-h-[calc(100vh-100px)] rounded-2xl p-6 bg-white mt-14 mx-auto overflow-scroll shadow-2xl border border-slate-200/70"
+        className="w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] max-h-[80vh] rounded-2xl p-6 bg-white mt-14 mx-auto overflow-scroll shadow-2xl border border-slate-200/70 outline-none"
       >
         <AudioNote
           onClose={() => setIsAudioOpen(false)}
@@ -719,10 +721,11 @@ const Home = () => {
         style={{
           overlay: {
             backgroundColor: "rgba(15, 23, 42, 0.35)",
+            zIndex: 9998,
           },
         }}
         contentLabel=""
-        className="relative w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] max-h-[calc(100vh-100px)] rounded-2xl p-6 bg-white mt-14 mx-auto overflow-scroll shadow-2xl border border-slate-200/70"
+        className="w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] max-h-[80vh] rounded-2xl p-6 bg-white mt-14 mx-auto shadow-2xl border border-slate-200/70 outline-none overflow-scroll"
       >
         <AddEditNote
           type={openAddEditModal.type}
@@ -747,7 +750,7 @@ const Home = () => {
           },
         }}
         contentLabel=""
-        className="w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] max-h-[80vh] rounded-2xl p-6 bg-white mt-14 mx-auto overflow-hidden shadow-2xl border border-slate-200/70 outline-none"
+        className="w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] max-h-[80vh] rounded-2xl p-6 bg-white mt-14 mx-auto overflow-scroll shadow-2xl border border-slate-200/70 outline-none"
       >
         <ReadNote
           noteData={isReadNoteOpen.data}

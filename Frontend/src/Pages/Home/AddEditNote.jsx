@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
 import TagInput from "../../Components/Inputs/TagInput";
 import { MdClose, MdAutoAwesome, MdAutoFixHigh } from "react-icons/md";
@@ -233,9 +233,9 @@ const AddEditNote = ({
   };
 
   return (
-    <div className="relative">
+    <div className="relative flex flex-col h-full max-h-[80vh]">
       {isLoading && <FullScreenLoader message={type === 'edit' ? 'Updating Note...' : 'Saving Note...'} />}
-      {isAiLoading && <FullScreenLoader message={type === 'edit' ? 'Refining Note with AI...' : 'Generating Note with AI...'} />}
+      {isAiLoading && <FullScreenLoader message={type === 'edit' ? 'Refining Note with AI...' : 'Turn this into a smart note...'} />}
       
       <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
         <h3 className="text-lg font-semibold text-slate-800">
@@ -380,3 +380,13 @@ const AddEditNote = ({
 };
 
 export default AddEditNote;
+
+AddEditNote.propTypes = {
+  onClose: PropTypes.func,
+  type: PropTypes.string,
+  getAllNotes: PropTypes.func,
+  noteData: PropTypes.object,
+  showToastMessage: PropTypes.func,
+  categories: PropTypes.array,
+  refreshCategories: PropTypes.func,
+};

@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 const SearchBar = ({ value, onChange, handleSearch, onClearSearch }) => {
@@ -26,6 +26,13 @@ const SearchBar = ({ value, onChange, handleSearch, onClearSearch }) => {
       />
     </div>
   );
+};
+
+SearchBar.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  handleSearch: PropTypes.func,
+  onClearSearch: PropTypes.func,
 };
 
 export default SearchBar;

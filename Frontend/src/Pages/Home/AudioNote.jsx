@@ -8,10 +8,9 @@ import {
   MdStop,
   MdUpload,
 } from "react-icons/md";
+import PropTypes from "prop-types";
 import axiosInstance from "../../Utils/axiosInstance";
 import FullScreenLoader from "../../Components/Loading/FullScreenLoader";
-
-/* eslint-disable react/prop-types */
 
 function getSpeechRecognition() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -561,11 +560,15 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
     if (isGenerating) return "Generating Note with AI...";
     if (isTranscribingUpload) {
       if (uploadStage === "converting") return "Converting Audio Format...";
-      if (uploadStage === "transcribing") return "Transcribing Audio...";
+      if (uploadStage === "transcribing") {
+        return uploadProgress !== null
+          ? `Transcribing Audio... ${uploadProgress}%`
+          : "Transcribing Audio...";
+      }
       return "Processing Audio...";
     }
     return "Loading...";
-  }, [isGenerating, isTranscribingUpload, uploadStage]);
+  }, [isGenerating, isTranscribingUpload, uploadProgress, uploadStage]);
 
   const showLoader = isGenerating || isTranscribingUpload;
 
@@ -714,6 +717,10 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
                     <span className={`w-2 h-2 rounded-full ${micPermission === "granted" ? "bg-emerald-500" : "bg-slate-300"}`} />
                     Mic: {micPermission}
                   </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className={`w-2 h-2 rounded-full ${isSecure ? "bg-emerald-500" : "bg-amber-400"}`} />
+                    Secure: {isSecure ? "yes" : "no"}
+                  </span>
                   <label className="flex items-center gap-1.5 cursor-pointer hover:text-slate-600 transition-colors">
                     <input 
                       type="checkbox" 
@@ -728,6 +735,7 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
 
               {status === "recording" && liveDictationEnabled && (
                 <div className="mt-6 w-full max-w-md text-center">
+                   <div className="text-[11px] text-slate-400 mb-2">{micStatus}</div>
                    <p className="text-sm text-slate-700 font-medium leading-relaxed">
                      {finalTranscript || interimTranscript || "Listening..."}
                    </p>
@@ -830,3 +838,9 @@ function AudioNote({ onClose, onUseText, onUseDraft }) {
 }
 
 export default AudioNote;
+
+AudioNote.propTypes = {
+  onClose: PropTypes.func,
+  onUseText: PropTypes.func,
+  onUseDraft: PropTypes.func,
+};

@@ -59,6 +59,7 @@ const Login = () => {
   return (
     <>
       <NavBar />
+      {isLoading && <FullScreenLoader message="Logging in..." />}
 
       <div className="flex items-center justify-center min-h-[calc(100vh-80px)] bg-slate-50/50 px-4">
         <div className="w-full max-w-sm border border-slate-200 rounded-2xl bg-white p-8 shadow-sm hover:shadow-md transition-shadow">

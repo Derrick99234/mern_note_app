@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { LuCheck } from "react-icons/lu";
 import { MdDeleteOutline } from "react-icons/md";
@@ -39,5 +39,12 @@ function Toast({ isShown, message, handleToastClose, type }) {
     </div>
   );
 }
+
+Toast.propTypes = {
+  isShown: PropTypes.bool,
+  message: PropTypes.string,
+  handleToastClose: PropTypes.func,
+  type: PropTypes.string,
+};
 
 export default Toast;

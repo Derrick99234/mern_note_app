@@ -1,6 +1,6 @@
-import React from 'react';
-import { MdClose, MdOutlinePushPin, MdAccessTime, MdLabelOutline, MdFolderOpen } from 'react-icons/md';
-import { formatNoteDate } from '../../Utils/helper';
+import { MdClose, MdOutlinePushPin, MdAccessTime, MdLabelOutline, MdFolderOpen } from "react-icons/md";
+import PropTypes from "prop-types";
+import { formatNoteDate } from "../../Utils/helper";
 
 const ReadNote = ({ noteData, onClose }) => {
   if (!noteData) return null;
@@ -73,3 +73,8 @@ const ReadNote = ({ noteData, onClose }) => {
 };
 
 export default ReadNote;
+
+ReadNote.propTypes = {
+  noteData: PropTypes.object,
+  onClose: PropTypes.func,
+};

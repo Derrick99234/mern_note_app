@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
+
 const Loading = ({ type = 'spinner', size = 'md', className = '' }) => {
   if (type === 'dots') {
     return (
@@ -27,6 +28,12 @@ const Loading = ({ type = 'spinner', size = 'md', className = '' }) => {
       />
     </div>
   );
+};
+
+Loading.propTypes = {
+  type: PropTypes.oneOf(["spinner", "dots"]),
+  size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
+  className: PropTypes.string,
 };
 
 export default Loading;

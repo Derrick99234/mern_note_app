@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
@@ -64,6 +64,12 @@ const NavBar = ({ onNoteSearch, userData, handleClearSearch }) => {
       )}
     </div>
   );
+};
+
+NavBar.propTypes = {
+  onNoteSearch: PropTypes.func,
+  userData: PropTypes.object,
+  handleClearSearch: PropTypes.func,
 };
 
 export default NavBar;

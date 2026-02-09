@@ -8,7 +8,7 @@ function authenticateToken(req, res, next) {
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) return res.sendStatus(403);
-    req.user = decoded.email;
+    req.user = decoded;
     next();
   });
 }

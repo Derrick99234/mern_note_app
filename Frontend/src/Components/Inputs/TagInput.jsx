@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
 
@@ -64,5 +64,10 @@ function TagInput({ tags, setTags }) {
     </div>
   );
 }
+
+TagInput.propTypes = {
+  tags: PropTypes.arrayOf(PropTypes.string),
+  setTags: PropTypes.func,
+};
 
 export default TagInput;

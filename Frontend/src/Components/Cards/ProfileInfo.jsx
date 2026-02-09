@@ -1,7 +1,7 @@
+import PropTypes from "prop-types";
 import { getInitails } from "../../Utils/helper";
 import { MdLogout } from "react-icons/md";
 
-/* eslint-disable react/prop-types */
 const ProfileInfo = ({ onLogout, userData }) => {
   return (
     <div className="flex items-center gap-3">
@@ -20,6 +20,13 @@ const ProfileInfo = ({ onLogout, userData }) => {
       </button>
     </div>
   );
+};
+
+ProfileInfo.propTypes = {
+  onLogout: PropTypes.func,
+  userData: PropTypes.shape({
+    fullname: PropTypes.string,
+  }),
 };
 
 export default ProfileInfo;
