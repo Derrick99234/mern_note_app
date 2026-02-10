@@ -17,9 +17,8 @@ function cookieOptions() {
   const isProd = String(process.env.NODE_ENV || "").toLowerCase() === "production";
   return {
     httpOnly: true,
-    secure: isProd,
-    sameSite: "lax",
-    path: "/",
+    secure: true,
+    sameSite: "None",
   };
 }
 
